@@ -34,6 +34,6 @@ jobs:
 
       # Step 6: Publish to npm
       - name: Publish to npm
-        run: npm publish
+        run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Correctly referencing the NPM_TOKEN secret
