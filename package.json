@@ -1,7 +1,7 @@
 {
-  "name": "parse-address",
-  "version": "1.1.2",
-  "description": "US Street Address Parser",
+  "name": "@nickgraffis/parse-address",
+  "version": "0.0.1",
+  "description": "US Street Address Parser. Forked from https://github.com/hassansin/parse-address.",
   "main": "address.js",
   "scripts": {
     "test": "node test",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hassansin/parse-address.git"
+    "url": "https://github.com/nickgraffis/parse-address.git"
   },
   "keywords": [
     "extract",
@@ -21,13 +21,17 @@
     "Geo::StreetAddress::US",
     "geo"
   ],
-  "author": "hassansin <rezatxe@gmail.com> (https://github.com/hassansin)",
+  "author": "nickgraffis <hi@nickgraffis.me> (https://github.com/nickgraffis)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hassansin/parse-address/issues"
+    "url": "https://github.com/nickgraffis/parse-address/issues"
   },
-  "homepage": "https://github.com/hassansin/parse-address",
+  "homepage": "https://github.com/nickgraffis/parse-address",
   "dependencies": {
     "xregexp": "^3.1.1"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.1",
+    "uglify-es": "^3.3.9"
   }
 }
