@@ -2,6 +2,66 @@ var parser = require('./address');
 var assert = require('assert');
 
 var address = {
+   '123 Main St Apt 4B, Springfield, IL 62704': {
+    number: '123',
+    street: 'Main',
+    type: 'St',
+    sec_unit_type: 'Apt',
+    sec_unit_num: '4B',
+    city: 'Springfield',
+    state: 'IL',
+    zip: '62704'
+  },
+  '456 Oak Ave Apartment 12, Anytown, NY 12345': {
+    number: '456',
+    street: 'Oak',
+    type: 'Ave',
+    sec_unit_type: 'Apartment',
+    sec_unit_num: '12',
+    city: 'Anytown',
+    state: 'NY',
+    zip: '12345'
+  },
+  '789 Elm Street Apt 5, New York, NY 10001': {
+    number: '789',
+    street: 'Elm',
+    type: 'Street',
+    sec_unit_type: 'Apt',
+    sec_unit_num: '5',
+    city: 'New York',
+    state: 'NY',
+    zip: '10001'
+  },
+  '321 Pine Rd Unit 10, Los Angeles, CA 90210': {
+    number: '321',
+    street: 'Pine',
+    type: 'Rd',
+    sec_unit_type: 'Unit',
+    sec_unit_num: '10',
+    city: 'Los Angeles',
+    state: 'CA',
+    zip: '90210'
+  },
+  '1600 Pennsylvania Avenue Apt 1A, Washington, DC 20006': {
+    number: '1600',
+    street: 'Pennsylvania',
+    type: 'Avenue',
+    sec_unit_type: 'Apt',
+    sec_unit_num: '1A',
+    city: 'Washington',
+    state: 'DC',
+    zip: '20006'
+  },
+  '1234 Broadway Suite 5678, San Francisco, CA 94109': {
+    number: '1234',
+    street: 'Broadway',
+    type: 'Suite',
+    sec_unit_type: 'Suite',
+    sec_unit_num: '5678',
+    city: 'San Francisco',
+    state: 'CA',
+    zip: '94109'
+  },
   '1005 Gravenstein Hwy 95472': {
     number: '1005',
     street: 'Gravenstein',
