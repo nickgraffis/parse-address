@@ -1,34 +1,39 @@
 name: Publish to npm
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - master # or your target branch
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Setup Node.js
+      # Step 2: Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16" # You can specify the node version you want
+          node-version: "16"
 
-      # Install dependencies
+      # Step 3: Install npm dependencies
       - name: Install dependencies
         run: npm install
 
-      # Publish to npm
+      # Step 4: Configure npm to use the correct registry
+      - name: Configure npm registry
+        run: npm config set registry https://registry.npmjs.org/
+
+      # Step 5: Run the build process (optional, if you have a build step)
+      - name: Build the project
+        run: npm run build
+
+      # Step 6: Publish to npm
       - name: Publish to npm
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      # Optionally, you can add a step to notify success
-      - name: Notify Success
-        run: echo "Package successfully published to npm!"
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Correctly referencing the NPM_TOKEN secret
