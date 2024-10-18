@@ -562,23 +562,21 @@
     Addr_Match.po_box = 'p\\W*(?:[om]|ost\\ ?office)\\W*b(?:ox)?'
 
     Addr_Match.sec_unit_type_numbered = '             \n\
-      (?<sec_unit_type_1>su?i?te                      \n\
-        |'+Addr_Match.po_box+'                        \n\
-        |(?:ap|dep)(?:ar)?t(?:me?nt)?                 \n\
-        |ro*m                                         \n\
-        |flo*r?                                       \n\
-        |uni?t                                        \n\
-        |bu?i?ldi?n?g                                 \n\
-        |ha?nga?r                                     \n\
-        |lo?t                                         \n\
-        |pier                                         \n\
-        |slip                                         \n\
-        |spa?ce?                                      \n\
-        |stop                                         \n\
-        |tra?i?le?r                                   \n\
-        |box)(?![a-z]                                 \n\
-      )                                               \n\
-      ';
+  (?<sec_unit_type_1>su?i?te                      \n\
+    |apt(?:a?r?t?me?n?t)?                          \n\
+    |ap(?:ar)?t(?:me?nt)?                          \n\
+    |uni?t                                        \n\
+    |bu?i?ldi?n?g                                 \n\
+    |lo?t                                         \n\
+    |fl(?:oo)?r?                                  \n\
+    |ro*m                                         \n\
+    |p(?:ost\\W*office)?\\W*box                   \n\
+    |spa?ce?                                      \n\
+    |trailer                                      \n\
+    |box)(?![a-z]                                 \n\
+  )                                               \n\
+  ';
+
 
     Addr_Match.sec_unit_type_unnumbered = '           \n\
       (?<sec_unit_type_2>ba?se?me?n?t                 \n\
@@ -655,38 +653,49 @@
       '+Addr_Match.place+'\\W*$','ix');
   }
   parser.normalize_address = function(parts){
-    lazyInit();
-    if(!parts)
-      return null;
-    var parsed = {};
+  lazyInit();
+  if(!parts)
+    return null;
+  var parsed = {};
 
-    Object.keys(parts).forEach(function(k){
-      if(['input','index'].indexOf(k) !== -1 || isFinite(k))
-        return;
-      var key = isFinite(k.split('_').pop())? k.split('_').slice(0,-1).join('_'): k ;
-      if(parts[k])
-        parsed[key] = parts[k].trim().replace(/^\s+|\s+$|[^\w\s\-#&]/g, '');
-    });
-    each(Normalize_Map, function(map,key) {
-      if(parsed[key] && map[parsed[key].toLowerCase()]) {
-        parsed[key] = map[parsed[key].toLowerCase()];
-      }
-    });
-
-    ['type', 'type1', 'type2'].forEach(function(key){
-      if(key in parsed)
-        parsed[key] = parsed[key].charAt(0).toUpperCase() + parsed[key].slice(1).toLowerCase();
-    });
-
-    if(parsed.city){
-      parsed.city = XRegExp.replace(parsed.city,
-        XRegExp('^(?<dircode>'+Addr_Match.dircode+')\\s+(?=\\S)','ix'),
-        function(match){
-          return capitalize(Direction_Code[match.dircode.toUpperCase()]) +' ';
-        });
+  Object.keys(parts).forEach(function(k){
+    if(['input','index'].indexOf(k) !== -1 || isFinite(k))
+      return;
+    var key = isFinite(k.split('_').pop()) ? k.split('_').slice(0,-1).join('_') : k;
+    if(parts[k])
+      parsed[key] = parts[k].trim().replace(/^\s+|\s+$|[^\w\s\-#&]/g, '');
+  });
+  
+  each(Normalize_Map, function(map,key) {
+    if(parsed[key] && map[parsed[key].toLowerCase()]) {
+      parsed[key] = map[parsed[key].toLowerCase()];
     }
-    return parsed;
-  };
+  });
+
+  // Capitalize apartment/unit types
+  ['type', 'type1', 'type2'].forEach(function(key){
+    if(key in parsed)
+      parsed[key] = parsed[key].charAt(0).toUpperCase() + parsed[key].slice(1).toLowerCase();
+  });
+
+  // Add handling for apartments
+  if (parsed.sec_unit_type_1 && (parsed.sec_unit_type_1.toLowerCase() === 'apt' || parsed.sec_unit_type_1.toLowerCase() === 'apartment')) {
+    parsed.sec_unit_type = 'Apt';
+  } else if (parsed.sec_unit_type_1 && parsed.sec_unit_type_1.toLowerCase() === 'unit') {
+    parsed.sec_unit_type = 'Unit';
+  }
+
+  if(parsed.city){
+    parsed.city = XRegExp.replace(parsed.city,
+      XRegExp('^(?<dircode>'+Addr_Match.dircode+')\\s+(?=\\S)','ix'),
+      function(match){
+        return capitalize(Direction_Code[match.dircode.toUpperCase()]) +' ';
+      });
+  }
+  
+  return parsed;
+};
+
 
   parser.parseAddress = function(address){
     lazyInit();
